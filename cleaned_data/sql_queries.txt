@@ -1,0 +1,297 @@
+================================================================================
+Q1_Average_Daily_Activity
+================================================================================
+SELECT
+            ROUND(AVG(total_steps), 2) AS avg_daily_steps,
+            ROUND(AVG(calories), 2) AS avg_daily_calories,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sedentary_minutes), 2) AS avg_sedentary_minutes
+        FROM daily_activity
+
+================================================================================
+Q2_Top_10_Activity_Days
+================================================================================
+SELECT
+            activity_date,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(calories), 2) AS avg_calories,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes
+        FROM daily_activity
+        GROUP BY activity_date
+        ORDER BY avg_steps DESC
+        LIMIT 10
+
+================================================================================
+Q3_Top_10_Users_By_Steps
+================================================================================
+SELECT
+            id,
+            COUNT(*) AS activity_days,
+            ROUND(AVG(total_steps), 2) AS avg_daily_steps,
+            ROUND(AVG(calories), 2) AS avg_daily_calories,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes
+        FROM daily_activity
+        GROUP BY id
+        ORDER BY avg_daily_steps DESC
+        LIMIT 10
+
+================================================================================
+Q4_Steps_Calories_Relationship
+================================================================================
+SELECT
+            ROUND(
+                CORR(total_steps, calories),
+                3
+            ) AS steps_calories_correlation
+        FROM daily_activity
+
+================================================================================
+Q5_Activity_By_Day
+================================================================================
+SELECT
+            day_name,
+            COUNT(*) AS records,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(calories), 2) AS avg_calories,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sedentary_minutes), 2) AS avg_sedentary_minutes
+        FROM daily_activity
+        GROUP BY day_name
+        ORDER BY
+            CASE day_name
+                WHEN 'Monday' THEN 1
+                WHEN 'Tuesday' THEN 2
+                WHEN 'Wednesday' THEN 3
+                WHEN 'Thursday' THEN 4
+                WHEN 'Friday' THEN 5
+                WHEN 'Saturday' THEN 6
+                WHEN 'Sunday' THEN 7
+            END
+
+================================================================================
+Q6_Weekday_vs_Weekend
+================================================================================
+SELECT
+            day_type,
+            COUNT(*) AS records,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(calories), 2) AS avg_calories,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sedentary_minutes), 2) AS avg_sedentary_minutes
+        FROM daily_activity
+        GROUP BY day_type
+
+================================================================================
+Q7_Activity_By_Hour
+================================================================================
+SELECT
+            EXTRACT(HOUR FROM activity_hour) AS hour,
+            ROUND(AVG(step_total), 2) AS avg_steps,
+            ROUND(AVG(calories), 2) AS avg_calories,
+            ROUND(AVG(total_intensity), 2) AS avg_total_intensity,
+            ROUND(AVG(average_intensity), 3) AS avg_intensity
+        FROM hourly_activity
+        GROUP BY hour
+        ORDER BY hour
+
+================================================================================
+Q8_Top_Activity_Hours
+================================================================================
+SELECT
+            EXTRACT(HOUR FROM activity_hour) AS hour,
+            ROUND(AVG(step_total), 2) AS avg_steps,
+            ROUND(AVG(calories), 2) AS avg_calories
+        FROM hourly_activity
+        GROUP BY hour
+        ORDER BY avg_steps DESC
+        LIMIT 5
+
+================================================================================
+Q9_Hourly_Weekday_Weekend
+================================================================================
+SELECT
+            CASE
+                WHEN EXTRACT(DOW FROM activity_hour) IN (0, 6)
+                    THEN 'Weekend'
+                ELSE 'Weekday'
+            END AS day_type,
+            EXTRACT(HOUR FROM activity_hour) AS hour,
+            ROUND(AVG(step_total), 2) AS avg_steps,
+            ROUND(AVG(calories), 2) AS avg_calories
+        FROM hourly_activity
+        GROUP BY day_type, hour
+        ORDER BY
+            CASE day_type
+                WHEN 'Weekday' THEN 1
+                ELSE 2
+            END,
+            hour
+
+================================================================================
+Q10_Top_Hours_By_Calories
+================================================================================
+SELECT
+            EXTRACT(HOUR FROM activity_hour) AS hour,
+            ROUND(AVG(calories), 2) AS avg_calories,
+            ROUND(AVG(step_total), 2) AS avg_steps
+        FROM hourly_activity
+        GROUP BY hour
+        ORDER BY avg_calories DESC
+        LIMIT 10
+
+================================================================================
+Q11_Sleep_Summary
+================================================================================
+SELECT
+            COUNT(*) AS records,
+            COUNT(DISTINCT id) AS users,
+            ROUND(AVG(sleep_hours), 2) AS avg_sleep_hours,
+            ROUND(MEDIAN(sleep_hours), 2) AS median_sleep_hours,
+            ROUND(AVG(time_in_bed_hours), 2) AS avg_time_in_bed
+        FROM sleep_daily
+
+================================================================================
+Q12_Sleep_By_Day
+================================================================================
+SELECT
+            day_name,
+            COUNT(*) AS records,
+            ROUND(AVG(sleep_hours), 2) AS avg_sleep_hours,
+            ROUND(AVG(time_in_bed_hours), 2) AS avg_time_in_bed
+        FROM sleep_daily
+        GROUP BY day_name
+        ORDER BY
+            CASE day_name
+                WHEN 'Monday' THEN 1
+                WHEN 'Tuesday' THEN 2
+                WHEN 'Wednesday' THEN 3
+                WHEN 'Thursday' THEN 4
+                WHEN 'Friday' THEN 5
+                WHEN 'Saturday' THEN 6
+                WHEN 'Sunday' THEN 7
+            END
+
+================================================================================
+Q13_Sleep_Categories
+================================================================================
+SELECT
+            CASE
+                WHEN sleep_hours < 5 THEN '<5 hours'
+                WHEN sleep_hours < 7 THEN '5–7 hours'
+                WHEN sleep_hours < 9 THEN '7–9 hours'
+                ELSE '9+ hours'
+            END AS sleep_category,
+            COUNT(*) AS records,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sedentary_minutes), 2) AS avg_sedentary_minutes
+        FROM activity_sleep
+        GROUP BY sleep_category
+        ORDER BY
+            CASE sleep_category
+                WHEN '<5 hours' THEN 1
+                WHEN '5–7 hours' THEN 2
+                WHEN '7–9 hours' THEN 3
+                WHEN '9+ hours' THEN 4
+            END
+
+================================================================================
+Q14_Sleep_Activity_Correlation
+================================================================================
+SELECT
+            ROUND(CORR(sleep_hours, total_steps), 3)
+                AS sleep_steps_correlation,
+            ROUND(CORR(sleep_hours, calories), 3)
+                AS sleep_calories_correlation,
+            ROUND(CORR(sleep_hours, total_active_minutes), 3)
+                AS sleep_activity_correlation,
+            ROUND(CORR(sleep_hours, sedentary_minutes), 3)
+                AS sleep_sedentary_correlation
+        FROM activity_sleep
+
+================================================================================
+Q15_User_Activity_Summary
+================================================================================
+SELECT
+            id,
+            COUNT(*) AS activity_days,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sedentary_minutes), 2) AS avg_sedentary_minutes,
+            ROUND(AVG(calories), 2) AS avg_calories
+        FROM daily_activity
+        GROUP BY id
+        ORDER BY avg_steps DESC
+
+================================================================================
+Q16_User_Sleep_Summary
+================================================================================
+SELECT
+            id,
+            COUNT(*) AS sleep_records,
+            ROUND(AVG(sleep_hours), 2) AS avg_sleep_hours,
+            ROUND(AVG(time_in_bed_hours), 2) AS avg_time_in_bed
+        FROM sleep_daily
+        GROUP BY id
+        ORDER BY avg_sleep_hours DESC
+
+================================================================================
+Q17_User_Data_Coverage
+================================================================================
+SELECT
+            id,
+            COUNT(*) AS activity_days,
+            MIN(activity_date) AS first_date,
+            MAX(activity_date) AS last_date
+        FROM daily_activity
+        GROUP BY id
+        ORDER BY activity_days DESC
+
+================================================================================
+Q18_High_Activity_Low_Sleep
+================================================================================
+SELECT
+            id,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sleep_hours), 2) AS avg_sleep_hours
+        FROM activity_sleep
+        GROUP BY id
+        HAVING AVG(total_steps) >= (
+            SELECT AVG(total_steps)
+            FROM activity_sleep
+        )
+        AND AVG(sleep_hours) < (
+            SELECT AVG(sleep_hours)
+            FROM activity_sleep
+        )
+        ORDER BY avg_steps DESC
+
+================================================================================
+Q19_User_Activity_Consistency
+================================================================================
+SELECT
+            id,
+            COUNT(*) AS activity_days,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(STDDEV(total_steps), 2) AS step_stddev
+        FROM daily_activity
+        GROUP BY id
+        HAVING COUNT(*) >= 10
+        ORDER BY step_stddev ASC
+
+================================================================================
+Q20_Activity_Sleep_Combined
+================================================================================
+SELECT
+            id,
+            COUNT(*) AS matched_days,
+            ROUND(AVG(total_steps), 2) AS avg_steps,
+            ROUND(AVG(total_active_minutes), 2) AS avg_active_minutes,
+            ROUND(AVG(sedentary_minutes), 2) AS avg_sedentary_minutes,
+            ROUND(AVG(sleep_hours), 2) AS avg_sleep_hours,
+            ROUND(AVG(calories), 2) AS avg_calories
+        FROM activity_sleep
+        GROUP BY id
+        ORDER BY avg_steps DESC
+

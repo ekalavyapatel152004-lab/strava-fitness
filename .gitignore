@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Raw/large source files
+*.xlsx
+*.xls
+
+# Exclude cleaned CSVs by default
+cleaned_data/*.csv
+
+# Keep only the core analytical datasets
+!cleaned_data/daily_activity_master.csv
+!cleaned_data/hourly_activity_master.csv
+!cleaned_data/sleep_daily_master.csv
+!cleaned_data/activity_sleep_merged.csv
+!cleaned_data/sql_query_catalog.csv
+!cleaned_data/sql_data_dictionary.csv
+
+# Keep SQL text file
+!cleaned_data/sql_queries.txt
+
+# DuckDB database
+!cleaned_data/fitness_analytics.duckdb
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+.streamlit/secrets.toml

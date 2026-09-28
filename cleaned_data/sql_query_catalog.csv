@@ -1,0 +1,21 @@
+question_id,category,question,difficulty,query_name
+Q1,Daily Activity,What is the average daily activity?,Beginner,Q1_Average_Daily_Activity
+Q2,Daily Activity,What are the top 10 activity days?,Beginner,Q2_Top_10_Activity_Days
+Q3,Daily Activity,Which users have the highest average steps?,Intermediate,Q3_Top_10_Users_By_Steps
+Q4,Daily Activity,What is the relationship between steps and calories?,Intermediate,Q4_Steps_Calories_Relationship
+Q5,Daily Activity,How does activity vary by day of week?,Beginner,Q5_Activity_By_Day
+Q6,Daily Activity,How does weekday activity compare with weekend activity?,Beginner,Q6_Weekday_vs_Weekend
+Q7,Hourly Activity,What is the activity pattern across 24 hours?,Intermediate,Q7_Activity_By_Hour
+Q8,Hourly Activity,What are the top activity hours?,Beginner,Q8_Top_Activity_Hours
+Q9,Hourly Activity,How does hourly activity differ between weekdays and weekends?,Advanced,Q9_Hourly_Weekday_Weekend
+Q10,Hourly Activity,Which hours have the highest calorie activity?,Intermediate,Q10_Top_Hours_By_Calories
+Q11,Sleep,What is the average sleep duration?,Beginner,Q11_Sleep_Summary
+Q12,Sleep,How does sleep vary by day of week?,Beginner,Q12_Sleep_By_Day
+Q13,Sleep,How are records distributed across sleep-duration categories?,Intermediate,Q13_Sleep_Categories
+Q14,Sleep,What are the correlations between sleep and activity?,Advanced,Q14_Sleep_Activity_Correlation
+Q15,User Insights,What is each user's activity summary?,Intermediate,Q15_User_Activity_Summary
+Q16,User Insights,What is each user's sleep summary?,Intermediate,Q16_User_Sleep_Summary
+Q17,User Insights,How much activity data does each user have?,Beginner,Q17_User_Data_Coverage
+Q18,User Insights,Which users have above-average activity and below-average sleep?,Advanced,Q18_High_Activity_Low_Sleep
+Q19,User Insights,Which users show lower variation in daily steps?,Advanced,Q19_User_Activity_Consistency
+Q20,User Insights,What is the combined activity and sleep profile of each user?,Advanced,Q20_Activity_Sleep_Combined
